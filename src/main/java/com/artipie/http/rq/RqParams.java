@@ -5,7 +5,6 @@
 package com.artipie.http.rq;
 
 import com.google.common.base.Splitter;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLDecoder;
@@ -55,11 +54,13 @@ public final class RqParams {
      * @return Parameter value.
      */
     public Optional<String> value(final String name) {
+        final Optional<String> result;
         if (this.query == null) {
-            return Optional.empty();
+            result = Optional.empty();
         } else {
-            return findValues(name).findFirst();
+            result = this.findValues(name).findFirst();
         }
+        return result;
     }
 
     /**
@@ -71,32 +72,36 @@ public final class RqParams {
      * @return List of Parameter values
      */
     public List<? extends String> values(final String name) {
+        final List<String> results;
         if (this.query == null) {
-            return Collections.emptyList();
+            results = Collections.emptyList();
         } else {
-            return findValues(name).collect(Collectors.toList());
+            results = this.findValues(name).collect(Collectors.toList());
         }
+        return results;
     }
 
-
-    private Stream<String> findValues(String name) {
+    /**
+     * Find in query all values for given parameter name.
+     * @param name Parameter name
+     * @return Stream {@link Stream} of found values
+     */
+    private Stream<String> findValues(final String name) {
         return StreamSupport.stream(
-                Splitter.on("&").omitEmptyStrings().split(this.query).spliterator(),
-                false
+            Splitter.on("&").omitEmptyStrings().split(this.query).spliterator(), false
         ).flatMap(
-                param -> {
-                    final String prefix = String.format("%s=", name);
-                    final Stream<String> value;
-                    if (param.startsWith(prefix)) {
-                        value = Stream.of(param.substring(prefix.length()));
-                    } else {
-                        value = Stream.empty();
-                    }
-                    return value;
+            param -> {
+                final String prefix = String.format("%s=", name);
+                final Stream<String> value;
+                if (param.startsWith(prefix)) {
+                    value = Stream.of(param.substring(prefix.length()));
+                } else {
+                    value = Stream.empty();
                 }
+                return value;
+            }
         ).map(RqParams::decode);
     }
-
 
     /**
      * Decode string using URL-encoding.
