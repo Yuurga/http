@@ -49,8 +49,8 @@ public final class RqParamsTest {
             Arguments.arguments("prm=koko", Collections.emptyList()),
             Arguments.arguments("baa=bar&fy=baz", Collections.emptyList()),
             Arguments.arguments("ba=bak&fyi=baz", Arrays.asList("bak")),
-            Arguments.arguments("ba=bar&foo=baz", Arrays.asList("bar", "baz")),
-            Arguments.arguments("ba=bas&key=ksu&foo=bobo", Arrays.asList("bas", "bobo")),
+            Arguments.arguments("ba=bar&ba=baz", Arrays.asList("bar", "baz")),
+            Arguments.arguments("ba=bas&key=ksu&ba=bobo", Arrays.asList("bas", "bobo")),
             Arguments.arguments("ba=bar%26bobo", Arrays.asList("bar&bobo"))
             );
     }
