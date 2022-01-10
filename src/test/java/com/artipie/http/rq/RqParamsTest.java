@@ -11,6 +11,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -46,14 +47,14 @@ public final class RqParamsTest {
         return Stream.of(
                 Arguments.arguments("", Collections.emptyList()),
                 Arguments.arguments("''", Collections.emptyList()),
-                Arguments.arguments("foo=", List.of("")),
+                Arguments.arguments("foo=", Arrays.asList("")),
                 Arguments.arguments("prm=koko", Collections.emptyList()),
                 Arguments.arguments("fo=bar&fy=baz", Collections.emptyList()),
-                Arguments.arguments("foo=bar&fyi=baz", List.of("bar")),
-                Arguments.arguments("foo=bar&foo=baz",List.of("bar","baz")),
-                Arguments.arguments("foo=bar&key=ksu&foo=bobo",List.of("bar","bobo")),
-                Arguments.arguments("foo=bar%26bobo",List.of("bar&bobo"))
-        );
+                Arguments.arguments("foo=bar&fyi=baz", Arrays.asList("bar"),
+                        Arguments.arguments("foo=bar&foo=baz", Arrays.asList("bar", "baz")),
+                        Arguments.arguments("foo=bar&key=ksu&foo=bobo", Arrays.asList("bar", "bobo")),
+                        Arguments.arguments("foo=bar%26bobo", Arrays.asList("bar&bobo"))
+                        ));
     }
 
     @ParameterizedTest
@@ -64,6 +65,4 @@ public final class RqParamsTest {
                 new IsEqual<>(expected)
         );
     }
-
-
 }
